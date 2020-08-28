@@ -89,7 +89,7 @@ blocks:
           width: 200
         - headerName: Description
           field: description
-          width: 400
+          width: 800
     actions:
       onRowClick: # Define what happens when a row is clicked
         - id: set_edit_brand
@@ -116,13 +116,13 @@ blocks:
     layout:
       contentGutter: 16 # Set a gutter of 16px between all the blocks in the drawer
     blocks:
-      - id: new_brand.name # A single line TextInput block to capture the new brand name
+      - id: new_brand.name # A single line text box block to capture the new brand name
         type: TextInput
         properties:
           title: Name
           placeholder: Brand Name # Text to display inside the input box when nothing has been entered yet
-      - id: new_brand.description
-        type: TextInput
+      - id: new_brand.description # A multiline text box block to capture the new brand description
+        type: TextArea
         properties:
           title: Description
           placeholder: Brand Description
@@ -162,7 +162,7 @@ blocks:
           title: Name
           placeholder: Brand Name
       - id: edit_brand.description
-        type: TextInput
+        type: TextArea
         properties:
           title: Description
           placeholder: Brand Description
