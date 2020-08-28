@@ -1,0 +1,35 @@
+connections: # Define all the data connections, in this case the brands and products MongoDB collections
+  - id: brands # The connectionId that will be used when defining requests and mutations later on
+    type: MongoDBCollection # The type of connection
+    properties:
+      databaseName: example-crud # The database in which the collections are
+      collection: brands # The collection name
+      databaseUri:
+        _secret: lowdefy_examples_mdb # The database connection uri that is stored as a _secret
+      write: true # Allows writes to the database. By default writes are not allowed.
+  - id: products
+    type: MongoDBCollection
+    properties:
+      databaseName: example-crud
+      collection: products
+      databaseUri:
+        _secret: lowdefy_examples_mdb
+      write: true
+
+menus: # Menus used in the app can be listed here
+  - id: main_menu
+    links:
+      - id: brands # Define the menu link that directs to the brands page
+        type: MenuLink
+        pageId: brands # Id of the brands page
+        properties:
+          title: Brands # Title to show on the menu
+      - id: products
+        type: MenuLink
+        pageId: products
+        properties:
+          title: Products
+
+pages: # All the pages in the app are listed here
+  - _ref: brands.yaml # Instead of defining the brands page here, it is defined in the brands.yaml file and referenced here
+  - _ref: products.yaml
