@@ -31,5 +31,7 @@ menus: # Menus used in the app can be listed here
           title: Products
 
 pages: # All the pages in the app are listed here
-  - _ref: brands.yaml # Instead of defining the brands page here, it is defined in the brands.yaml file and referenced here
+  - _ref: brands.yaml # Instead of defining the brands page in the lowdefy.yaml file, it is defined in brands.yaml and referenced here
+  - _ref: new_brand.yaml
+  - _ref: edit_brand.yaml
   - _ref: products.yaml

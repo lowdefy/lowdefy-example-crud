@@ -1,0 +1,65 @@
+id: new-brand
+type: PageSiderMenu
+properties:
+  title: New Brand
+layout:
+  contentGutter: 16 # Set a gutter of 16px between all the blocks on the page
+
+mutations:
+  - id: insert_brand
+    type: MongoDBInsertOne # MongoDb insertOne mutation to write a new brand into the collection
+    connectionId: brands
+    properties:
+      doc:
+        name:
+          _state: name # Insert the brand name we set in state
+        description:
+          _state: description # Insert the description name we set in state
+
+blocks:
+  - id: new_brand_title # Create a Title block
+    type: Title
+    properties:
+      content: New Brand # The title's text
+  - id: name # A single line text box block to capture the new brand name
+    type: TextInput
+    properties:
+      title: Name
+      placeholder: Brand Name # Text to display inside the input box when nothing has been entered yet
+  - id: description # A multiline text box block to capture the new brand description
+    type: TextArea
+    properties:
+      title: Description
+      placeholder: Brand Description
+  - id: insert_brand
+    type: Button
+    layout:
+      span: 16
+    properties:
+      title: Save
+      icon: SaveOutlined
+      block: true # Makes the button fill the maximum defined width instead of only the with of its contents (title and icon)
+    actions:
+      onClick:
+        - id: insert_brand # Call the insert_brand mutation
+          type: Mutate
+          params: insert_brand
+        - id: link_brands # Link back to the brands page
+          type: Link
+          params:
+            pageId: brands
+  - id: back
+    type: Button
+    layout:
+      span: 8
+    properties:
+      title: Back
+      icon: ArrowLeftOutlined
+      type: default # Change the type of the button to default
+      block: true # Makes the button fill the maximum defined width instead of only the with of its contents (title and icon)
+    actions:
+      onClick:
+        - id: link_brands # Link back to the brands page
+          type: Link
+          params:
+            pageId: brands

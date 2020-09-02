@@ -3,6 +3,12 @@ type: PageSiderMenu
 properties:
   title: Brands
 
+actions:
+  onEnter: # A list of actions that gets completed each time the page is loaded
+    - id: fetch_brands
+      type: Fetch
+      params: brands_table # Fetch the brands table query each time you enter the page
+      
 requests:
   - id: brands_table
     type: MongoDBAggregation # MongoDb Aggregation to get the table data
@@ -62,17 +68,10 @@ blocks:
       hideActionLoading: true # Hides the loading icon when the button is clicked
     actions:
       onClick: # A list of actions to complete when the button is clicked
-        - id: reset_brand_info # Resets the fields in the new_brand object
-          type: SetState
+        - id: link_new_brand # Link to the page where we will add a new brand
+          type: Link
           params:
-            new_brand:
-              name: null
-              description: null
-        - id: open_new_drawer # Open the drawer which contains the input fields to add a new brand
-          type: CallMethod
-          params:
-            blockId: new_brand_drawer # The block id of the drawer
-            method: toggleOpen # The method that opens the drawer
+            pageId: new-brand # The page id of the new brand page
 
   - id: brand_list # An agGrid table that lists all the brands
     type: AgGrid
@@ -102,129 +101,11 @@ blocks:
                 _args: row.name
               description:
                 _args: row.description
-        - id: open_edit_drawer # Open the drawer which contains the input fields to edit the selected brand
-          type: CallMethod
+        - id: link_edit_brand # Link to the page where we will edit the selected brand
+          type: Link
           params:
-            blockId: edit_brand_drawer
-            method: toggleOpen
-
-  - id: new_brand_drawer
-    type: Drawer
-    properties:
-      title: New Brand
-      width: 512px # Set the width of the drawer to be 512px
-    layout:
-      contentGutter: 16 # Set a gutter of 16px between all the blocks in the drawer
-    blocks:
-      - id: new_brand.name # A single line text box block to capture the new brand name
-        type: TextInput
-        properties:
-          title: Name
-          placeholder: Brand Name # Text to display inside the input box when nothing has been entered yet
-      - id: new_brand.description # A multiline text box block to capture the new brand description
-        type: TextArea
-        properties:
-          title: Description
-          placeholder: Brand Description
-      - id: insert_brand
-        type: Button
-        properties:
-          title: Save
-          icon: SaveOutlined
-          block: true # Makes the button fill the maximum defined width instead of only the with of its contents (title and icon)
-        actions:
-          onClick:
-            - id: insert_brand # Call the insert_brand mutation
-              type: Mutate
-              params: insert_brand
-            - id: fetch_brands_table # Fetch the brands_table request again to show the newly created brand in the table
-              type: Fetch
-              params: brands_table
-            - id: close_new_drawer # Close the new_brand drawer
-              type: CallMethod
-              params:
-                blockId: new_brand_drawer
-                method: setOpen  # The method that closes the drawer - set the open state of the drawer to false
-                args:
-                  open: false
-
-  - id: edit_brand_drawer
-    type: Drawer
-    properties:
-      title: New Brand
-      width: 512px
-    layout:
-      contentGutter: 16
-    blocks:
-      - id: edit_brand.name
-        type: TextInput
-        properties:
-          title: Name
-          placeholder: Brand Name
-      - id: edit_brand.description
-        type: TextArea
-        properties:
-          title: Description
-          placeholder: Brand Description
-      - id: update_brand
-        type: Button
-        layout:
-          span: 12 # Make the button span 2 half of the drawer's width
-        properties:
-          title: Save
-          icon: SaveOutlined
-          block: true
-        actions:
-          onClick:
-            - id: update_brand
-              type: Mutate
-              params: update_brand
-            - id: fetch_brands_table
-              type: Fetch
-              params: brands_table
-            - id: close_drawer
-              type: CallMethod
-              params:
-                blockId: edit_brand_drawer
-                method: setOpen
-                args:
-                  open: false
-      - id: delete_brand # Button for deleting the brand
-        type: Button
-        layout:
-          span: 12
-        properties:
-          title: Delete
-          icon: DeleteOutlined
-          type: danger # Set the type of button to a danger button (which is red in color)
-          block: true
-        actions:
-          onClick:
-            - id: open_delete_modal # Open a pop up modal to confirm whether you want to delete the brand
-              type: CallMethod
-              params:
-                blockId: delete_modal
-                method: open
-      - id: delete_modal
-        type: ConfirmModal
-        properties:
-          content: Are you sure you want to delete this brand? # The text inside the modal
-          okText: Yes # Change the default text of the ok button to 'Yes'
-          okButton:
-            type: danger # Change the default type of the ok button to danger
-          cancelText: No # Change the default text of the cancel button to 'No'
-        actions:
-          onOk:
-            - id: delete_brand
-              type: Mutate
-              params: delete_brand
-            - id: fetch_brands_table
-              type: Fetch
-              params: brands_table
-            - id: close_edit_drawer
-              type: CallMethod
-              params:
-                blockId: edit_brand_drawer
-                method: setOpen
-                args:
-                  open: false
+            pageId: edit-brand # The page id of the edit brand page
+            input:
+              brand_id:
+                _args: row._id  # Provide the _id field of the selected brand to use as input for the page we are linking to
+                              # Call the row _args (the row data) to access the selected row's data
