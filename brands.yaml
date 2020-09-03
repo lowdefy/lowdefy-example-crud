@@ -21,36 +21,6 @@ requests:
         - $sort:
             name: 1 # Sort alphabetically according to the name
 
-mutations:
-  - id: insert_brand
-    type: MongoDBInsertOne # MongoDb insertOne mutation to write a new brand into the collection
-    connectionId: brands
-    properties:
-      doc:
-        _state: new_brand # Insert the entire new_brand object, which contains the brand name and description
-  - id: update_brand
-    type: MongoDBUpdateOne # MongoDb updateOne mutation to update the selected brand
-    connectionId: brands
-    properties:
-      filter:
-        _id:
-          _state: edit_brand._id # Filter the document that matches the selected document's _id (which is nested in the edit_brand object)
-      update:
-        $set:
-          _state: edit_brand # Update all the fields in the edit_brand object, which contains the brand name and description
-  - id: delete_brand
-    type: MongoDBDeleteOne # MongoDb deleteOne mutation to delete the selected brand's document from the collection
-    connectionId: brands
-    properties:
-      filter:
-        _id:
-          _state: edit_brand._id # Filter the document that matches the selected document's _id
-
-  # We created a new_brand object and an edit_brand object that both contain the brand info.
-  # The reason for placing the brand info field in two separate objects instead of the root 
-  # level of state is to make the mutation operations easier and to enable us to have two 
-  # separate set of fields that capture the same information.
-
 blocks:
   - id: brand_title # Create a Title block
     type: Title
