@@ -5,8 +5,10 @@ properties:
 
 actions:
   onEnter:
-    - id: fetch_all #Fetch all the requests on the page each time the page is loaded
+    - id: fetch_brands  # Fetch the brands_selector lookup request when we enter the page
+                        # This will ensure that we have all the new addest brands at all times
       type: Fetch
+      params: brands_selector
 
 requests:
   - id: products_table
@@ -14,9 +16,6 @@ requests:
     connectionId: products # Id of the connection defined in the lowdefy.yaml file
     properties:
       pipeline:
-        - $match:
-            archive:
-              $ne: true # Match all documents that have not been archived
         - $sort:
             name: 1 # Sort alphabetically according to the name
   - id: brands_selector # MongoDb Aggregation to get a list of the brands and their _ids to be used by a brand dropdown selector
@@ -24,15 +23,12 @@ requests:
     connectionId: brands
     properties:
       pipeline:
-        - $match:
-            archive:
-              $ne: true # Match all documents that have not been archived
         - $project: # Project the correct fields that the dropdown selector expects: a list of value-label pairs
             _id: 0
             label: $name # This is what the user will see in the dropdown
             value: $_id # This is the value of the option selected in the dropdown
         - $sort:
-            label: 1 # Sort the list alphabetically according to the name
+            label: 1 # Sort the list alphabetically according to the label
 
 mutations:
   - id: insert_product
@@ -76,8 +72,8 @@ blocks:
     layout:
       shrink: true # Set the block the right side of the page
     properties:
-      title: New Product # Button text
-      icon: PlusOutlined # Ant Design icon
+      title: New Product
+      icon: PlusOutlined
       hideActionLoading: true # Hides the loading icon when the button is clicked
     actions:
       onClick: # A list of actions to complete when the button is clicked
@@ -117,7 +113,7 @@ blocks:
           params:
             edit_product: 
               _id:
-                _args: row._id # Call the row _args (the row data )to set the _id field in the edit_product object equal the _id field of the selected row
+                _args: row._id # Access the row _args (the row data) to set the _id field in the edit_product object equal the _id field of the selected row
               name:
                 _args: row.name
               description:
@@ -138,7 +134,7 @@ blocks:
     layout:
       contentGutter: 16 # Set a gutter of 16px between all the blocks in the drawer
     blocks:
-      - id: new_product.name # A single line text box block to capture the new product name
+      - id: new_product.name # Create a single line text box block to capture the new product name
         type: TextInput
         properties:
           title: Name
@@ -150,8 +146,8 @@ blocks:
           placeholder: Select brand
           options:
             _request: brands_selector # Populate the options of the dropdown using the request we defined earlier
-      - id: new_product.description # A multiline text box block to capture the new product description
-        type: TextArea
+      - id: new_product.description
+        type: TextArea # A multiline text box block to capture the new product description
         properties:
           title: Description
           placeholder: Product Description
@@ -254,7 +250,7 @@ blocks:
             - id: delete_product
               type: Mutate
               params: delete_product
-            - id: fetch_products_table
+            - id: fetch_products_table # Fetch the products_table request again to the list of products without the newly deleted one
               type: Fetch
               params: products_table
             - id: close_edit_drawer

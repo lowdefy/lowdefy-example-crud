@@ -4,22 +4,36 @@ properties:
   title: Brands
 
 actions:
-  onEnter: # A list of actions that gets completed each time the page is loaded
+  onEnter:  # A list of actions that gets completed each time the page is loaded.
+            # All the page requests are fetched automatically when the page is loaded for the first time,
+            # the reason we wantto fetch the brands_table request here is because we will link back to
+            # this page from the new-brand and edit-brand pages after making changes that require the
+            # brands_table request to be refetched.
     - id: fetch_brands
       type: Fetch
       params: brands_table # Fetch the brands table query each time you enter the page
       
 requests:
+### Which one of these two requests will work best for a simple example?
+
   - id: brands_table
-    type: MongoDBAggregation # MongoDb Aggregation to get the table data
+    type: MongoDBFind # MongoDb Aggregation to get the table data
     connectionId: brands # Id of the connection defined in the lowdefy.yaml file
     properties:
-      pipeline:
-        - $match:
-            archive:
-              $ne: true # Match all documents that have not been archived
-        - $sort:
-            name: 1 # Sort alphabetically according to the name
+      query:
+        _id:
+            $exists: true # Find all documents that exist
+      options:
+        sort: # Sort alphabetically according to the name
+          - - name
+            - 1
+  # - id: brands_table
+  #   type: MongoDBAggregation # MongoDb Aggregation to get the table data
+  #   connectionId: brands # Id of the connection defined in the lowdefy.yaml file
+  #   properties:
+  #     pipeline:
+  #       - $sort:
+  #           name: 1 # Sort alphabetically according to the name
 
 blocks:
   - id: brand_title # Create a Title block
@@ -28,7 +42,7 @@ blocks:
       grow: true # Set the block the left side of the page
     properties:
       content: Brands # The title's text
-  - id: new_brand # Create a Button block for adding a new brand
+  - id: new_brand_button # Create a Button block we can click when we want to add a new brand
     type: Button
     layout:
       shrink: true # Set the block the right side of the page
@@ -66,7 +80,7 @@ blocks:
           params:
             edit_brand: 
               _id:
-                _args: row._id # Call the row _args (the row data )to set the _id field in the edit_brand object equal the _id field of the selected row
+                _args: row._id # Access the row _args (the row data) to set the _id field in the edit_brand object equal the _id field of the selected row
               name:
                 _args: row.name
               description:
@@ -77,5 +91,5 @@ blocks:
             pageId: edit-brand # The page id of the edit brand page
             input:
               brand_id:
-                _args: row._id  # Provide the _id field of the selected brand to use as input for the page we are linking to
-                              # Call the row _args (the row data) to access the selected row's data
+                _args: row._id  # Access the row _args (the row data) to get the _id field of the selected
+                                # brand and use as input for the edit-brand page we are linking to
