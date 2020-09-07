@@ -143,7 +143,7 @@ blocks:
     type: Drawer
     properties:
       title: New Product
-      width: 512px # Set the width of the drawer to be 512px
+      width: 512 # Set the width of the drawer to be 512px
     layout:
       contentGutter: 16 # Set a gutter of 16px between all the blocks in the drawer
     blocks:
@@ -189,17 +189,15 @@ blocks:
       onClose:
         # Resets the fields in the new_product object.
         # This is so that if the user sets an input, then closes it and opens the drawer
-        # again, the input is reser
-        - id: reset_new_product
-          type: SetState
-          params:
-            new_product: null
+        # again, the input is reset
+        - id: reset
+          type: Reset
 
   - id: edit_product_drawer
     type: Drawer
     properties:
       title: Edit Product
-      width: 512px
+      width: 512
     layout:
       contentGutter: 16
     blocks:
