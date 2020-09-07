@@ -4,60 +4,51 @@ properties:
   title: Brands
 
 actions:
-  onEnter:  # A list of actions that gets completed each time the page is loaded.
-            # All the page requests are fetched automatically when the page is loaded for the first time,
-            # the reason we wantto fetch the brands_table request here is because we will link back to
-            # this page from the new-brand and edit-brand pages after making changes that require the
-            # brands_table request to be refetched.
+# A list of actions that gets completed each time the page is loaded. All the page requests are fetched automatically when the page is loaded for the first time, the reason we want to fetch the brands_table request here is because we will link back to this page from the new-brand and edit-brand pages after making changes and we want to then refresh the request.
+  onEnter:
     - id: fetch_brands
       type: Fetch
-      params: brands_table # Fetch the brands table query each time you enter the page
+      params: get_brands # Fetch the brands table query each time you enter the page
       
 requests:
-### Which one of these two requests will work best for a simple example?
-
-  - id: brands_table
-    type: MongoDBFind # MongoDb Aggregation to get the table data
+  - id: get_brands
+    type: MongoDBAggregation # MongoDb Aggregation to get the table data
     connectionId: brands # Id of the connection defined in the lowdefy.yaml file
     properties:
-      query:
-        _id:
-            $exists: true # Find all documents that exist
-      options:
-        sort: # Sort alphabetically according to the name
-          - - name
-            - 1
-  # - id: brands_table
-  #   type: MongoDBAggregation # MongoDb Aggregation to get the table data
-  #   connectionId: brands # Id of the connection defined in the lowdefy.yaml file
-  #   properties:
-  #     pipeline:
-  #       - $sort:
-  #           name: 1 # Sort alphabetically according to the name
+      pipeline:
+        - $sort:
+            name: 1 # Sort alphabetically according to the name
 
 blocks:
-  - id: brand_title # Create a Title block
+
+  - id: title # Create a Title block
     type: Title
+    # Flex properties are used to lay out the title and new brand button.
+    # If a flex property is set, the default span of 24 is not set.
+    # If the grow (flex-grow) property is a positive number, the block will expand to
+    # take up the available space to it. If more than one block with the grow property
+    # are in the same row, the will expand together together to share the available space.
+    # If a block has a grow property of 0, it will only occupy the space it takes due to its size.
+    # See docs.lowdefy.com/layout for more information.
     layout:
-      grow: true # Set the block the left side of the page
+      grow: 1 # Because the grow of the title is 1, it will expand to fill all the available space
     properties:
       content: Brands # The title's text
-  - id: new_brand_button # Create a Button block we can click when we want to add a new brand
+  - id: new_brand_button # Create a Button block to add a new brand
     type: Button
     layout:
-      shrink: true # Set the block the right side of the page
+      grow: 0 # Because the grow of the button is 0, it will not expand. Because the title has a grow of 1, it will expand, and the button will be placed on the right hand side of the area.
     properties:
       title: New Brand # Button text
       icon: PlusOutlined # Ant Design icon
-      hideActionLoading: true # Hides the loading icon when the button is clicked
     actions:
       onClick: # A list of actions to complete when the button is clicked
-        - id: link_new_brand # Link to the page where we will add a new brand
+        - id: link_to_new_brand # Link to the page where we will add a new brand
           type: Link
           params:
             pageId: new-brand # The page id of the new brand page
 
-  - id: brand_list # An agGrid table that lists all the brands
+  - id: brand_table # An agGrid table that lists all the brands
     type: AgGrid
     properties:
       defaultColDef: # Define default column definitions that apply to all the defined columns
@@ -65,7 +56,7 @@ blocks:
         resizable: true # Enables resizing of column widths
         filter: true # Enables filtering of the columns using agGrid's default filter
       rowData:
-        _request: brands_table # Populate the table with our request that looks up the brands
+        _request: get_brands # Populate the table with our request that looks up the brands
       columnDefs: # Define all the columns
         - headerName: Name # Display name
           field: name # The field name in the data
@@ -75,21 +66,10 @@ blocks:
           width: 800
     actions:
       onRowClick: # Define what happens when a row is clicked
-        - id: set_edit_brand
-          type: SetState
-          params:
-            edit_brand: 
-              _id:
-                _args: row._id # Access the row _args (the row data) to set the _id field in the edit_brand object equal the _id field of the selected row
-              name:
-                _args: row.name
-              description:
-                _args: row.description
-        - id: link_edit_brand # Link to the page where we will edit the selected brand
+        - id: link_to_edit_brand # Link to the page where we will edit the selected brand
           type: Link
           params:
             pageId: edit-brand # The page id of the edit brand page
-            input:
+            urlQuery:
               brand_id:
-                _args: row._id  # Access the row _args (the row data) to get the _id field of the selected
-                                # brand and use as input for the edit-brand page we are linking to
+                _args: row._id  # Access the row _args (the row data) to get the _id field of the selected brand and use as input for the edit-brand page we are linking to
