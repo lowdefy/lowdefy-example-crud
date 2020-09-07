@@ -1,3 +1,13 @@
+
+# On this page, we will handle both the edit and create product actions on the same page.
+
+# We will create separate forms for the new product and edit product forms. This is simpler 
+# than sharing the form. Sometimes additional actions and conditional logic are needed to manage these shared forms.
+
+# To simplify the state on the page, we will give ids that look like new_product.{fieldName}
+# and edit_product.{fieldName} to the input components. This will create separate objects in
+# the page state, that will make managing them easier.
+
 id: products
 type: PageSiderMenu
 properties:
@@ -5,8 +15,11 @@ properties:
 
 actions:
   onEnter:
-    - id: fetch_brands  # Fetch the brands_selector lookup request when we enter the page
-                        # This will ensure that we have all the new addest brands at all times
+    # Fetch the brands_selector lookup request when we enter the page
+    # This will ensure that we fetch newly added brands.
+    # If this is not done, the brands_selector request will only be fetched
+    # the first time the page is loaded.
+    - id: fetch_brands  
       type: Fetch
       params: brands_selector
 
@@ -30,13 +43,25 @@ requests:
         - $sort:
             label: 1 # Sort the list alphabetically according to the label
 
+# All the mutations are placed on the page object, so they are all together.
+# In the brands example, the mutations were placed on the block that used them, so they are close
+# to where they are used. Both approaches can be used, but it is best to be consistent throughout an app.
 mutations:
   - id: insert_product
     type: MongoDBInsertOne # MongoDb insertOne mutation to write a new product into the collection
     connectionId: products
     properties:
       doc:
-        _state: new_product # Insert the entire new_product object, which contains the product name and description
+        name:
+          _state: new_product.name
+        brand_id:
+          _state: new_product.brand_id
+        description:
+          _state: new_product.description
+        created_at: 
+          _date: now # Set created_at and updated_at dates as current time
+        updated_at:
+          _date: now
   - id: update_product
     type: MongoDBUpdateOne # MongoDb updateOne mutation to update the selected product
     connectionId: products
@@ -46,7 +71,14 @@ mutations:
           _state: edit_product._id # Filter the document that matches the selected document's _id (which is nested in the edit_product object)
       update:
         $set:
-          _state: edit_product # Update all the fields in the edit_product object, which contains the product name and description
+          name:
+            _state: edit_product.name
+          brand_id:
+            _state: edit_product.brand_id
+          description:
+            _state: edit_product.description
+          updated_at:
+            _date: now
   - id: delete_product
     type: MongoDBDeleteOne # MongoDb deleteOne mutation to delete the selected product's document from the collection
     connectionId: products
@@ -54,36 +86,22 @@ mutations:
       filter:
         _id:
           _state: edit_product._id # Filter the document that matches the selected document's _id
-
-  # We created a new_product object and an edit_product object that both contain the product info.
-  # The reason for placing the product info field in two separate objects instead of the root 
-  # level of state is to make the mutation operations easier and to enable us to have two 
-  # separate set of fields that capture the same information.
-
 blocks:
-  - id: product_title # Create a Title block
+  - id: title # Create a Title block
     type: Title
     layout:
-      grow: true # Set the block the left side of the page
+      grow: 1 # Use the same layout for the title as the brands page.
     properties:
       content: Products # The title's text
-  - id: new_product # Create a Button block for adding a new product
+  - id: new_product_button # Create a Button block for adding a new product
     type: Button
     layout:
-      shrink: true # Set the block the right side of the page
+      grow: 0
     properties:
       title: New Product
       icon: PlusOutlined
-      hideActionLoading: true # Hides the loading icon when the button is clicked
     actions:
-      onClick: # A list of actions to complete when the button is clicked
-        - id: reset_product_info # Resets the fields in the new_product object
-          type: SetState
-          params:
-            new_product:
-              name: null
-              description: null
-              brand_id: null
+      onClick:
         - id: open_new_drawer # Open the drawer which contains the input fields to add a new product
           type: CallMethod
           params:
@@ -107,19 +125,14 @@ blocks:
           field: description
           width: 800
     actions:
-      onRowClick: # Define what happens when a row is clicked
+      onRowClick:
+        # Set the edit_product object in state to the selected row.
+        # Since the row has the same datafields (_id, name, description and brand_id), these fields are populated.
         - id: set_edit_product
           type: SetState
           params:
             edit_product: 
-              _id:
-                _args: row._id # Access the row _args (the row data) to set the _id field in the edit_product object equal the _id field of the selected row
-              name:
-                _args: row.name
-              description:
-                _args: row.description
-              brand_id:
-                _args: row.brand_id
+              _args: row 
         - id: open_edit_drawer # Open the drawer which contains the input fields to edit the selected product
           type: CallMethod
           params:
@@ -147,7 +160,7 @@ blocks:
           options:
             _request: brands_selector # Populate the options of the dropdown using the request we defined earlier
       - id: new_product.description
-        type: TextArea # A multiline text box block to capture the new product description
+        type: TextArea # A multi-line text box block to capture the new product description
         properties:
           title: Description
           placeholder: Product Description
@@ -162,9 +175,6 @@ blocks:
             - id: insert_product # Call the insert_product mutation
               type: Mutate
               params: insert_product
-            - id: fetch_products_table # Fetch the products_table request again to show the newly created product in the table
-              type: Fetch
-              params: products_table
             - id: close_new_drawer # Close the new_product drawer
               type: CallMethod
               params:
@@ -172,11 +182,23 @@ blocks:
                 method: setOpen  # The method that closes the drawer - set the open state of the drawer to false
                 args:
                   open: false
+            - id: fetch_products_table # Fetch the products_table request again to show the newly created product in the table
+              type: Fetch
+              params: products_table
+    actions:
+      onClose:
+        # Resets the fields in the new_product object.
+        # This is so that if the user sets an input, then closes it and opens the drawer
+        # again, the input is reser
+        - id: reset_new_product
+          type: SetState
+          params:
+            new_product: null
 
   - id: edit_product_drawer
     type: Drawer
     properties:
-      title: New Product
+      title: Edit Product
       width: 512px
     layout:
       contentGutter: 16
@@ -198,33 +220,10 @@ blocks:
         properties:
           title: Description
           placeholder: Product Description
-      - id: update_product
+      - id: delete_product_button # Button for deleting the product
         type: Button
         layout:
-          span: 12 # Make the button span 2 half of the drawer's width
-        properties:
-          title: Save
-          icon: SaveOutlined
-          block: true
-        actions:
-          onClick:
-            - id: update_product
-              type: Mutate
-              params: update_product
-            - id: fetch_products_table
-              type: Fetch
-              params: products_table
-            - id: close_drawer
-              type: CallMethod
-              params:
-                blockId: edit_product_drawer
-                method: setOpen
-                args:
-                  open: false
-      - id: delete_product # Button for deleting the product
-        type: Button
-        layout:
-          span: 12
+          grow: 1 
         properties:
           title: Delete
           icon: DeleteOutlined
@@ -237,6 +236,30 @@ blocks:
               params:
                 blockId: delete_modal
                 method: open
+      - id: update_product_button
+        type: Button
+        layout:
+          grow: 3
+        properties:
+          title: Save
+          icon: SaveOutlined
+          block: true
+        actions:
+          onClick:
+            - id: update_product
+              type: Mutate
+              params: update_product
+            - id: close_drawer
+              type: CallMethod
+              params:
+                blockId: edit_product_drawer
+                method: setOpen
+                args:
+                  open: false
+            - id: fetch_products_table
+              type: Fetch
+              params: products_table
+
       - id: delete_modal
         type: ConfirmModal
         properties:
@@ -250,9 +273,6 @@ blocks:
             - id: delete_product
               type: Mutate
               params: delete_product
-            - id: fetch_products_table # Fetch the products_table request again to the list of products without the newly deleted one
-              type: Fetch
-              params: products_table
             - id: close_edit_drawer
               type: CallMethod
               params:
@@ -260,3 +280,6 @@ blocks:
                 method: setOpen
                 args:
                   open: false
+            - id: fetch_products_table # Fetch the products_table request again to the list of products without the newly deleted one
+              type: Fetch
+              params: products_table
