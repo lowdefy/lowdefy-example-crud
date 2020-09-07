@@ -1,6 +1,7 @@
 
 name: Lowdefy Admin Example
 version: 0.0.6
+licence: MIT
 description: |
   This example show patterns that can be used to implement an admin app, that allows
   users to see data records, create new new data records, edit those records and delete

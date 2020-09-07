@@ -9,3 +9,7 @@ A one-to-many relation will be created between the brands and the products. Each
 ## Running this example
 - Clone this repository
 - Run the Lowdefy CLI from the cloned repository
+
+## Licence
+
+This example configuration is licensed under the MIT license. See the LICENSE.md file for license rights and limitations.
