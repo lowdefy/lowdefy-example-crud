@@ -134,6 +134,7 @@ blocks:
         - id: delete_brand # Call the delete_brand mutation
           type: Mutate
           params: delete_brand
+        - id: link_to_brands
           type: Link
           params:
             pageId: brands
