@@ -47,7 +47,7 @@ blocks:
   - id: back # Create a back button that will link back to the brands page without making any changes
     type: Button
     layout:
-      grow: 1 # Because the button haas a grow of 1, it will expand to take up available space.
+      grow: 1 # Because the button has a grow of 1, it will expand to take up available space.
     properties:
       title: Back
       icon: ArrowLeftOutlined
@@ -78,7 +78,7 @@ blocks:
   - id: update_brand
     type: Button
     layout:
-      grow: 3 # Because the button haas a grow of 3, which is 3 times as large as the
+      grow: 3 # Because the button has a grow of 3, which is 3 times as large as the
       # grow value of the back and delete buttons, it will expand "3 times faster/bigger",
       # and occupy more space in the row. It will be laid out in the same row as the other
       # buttons, unless there is not enough space for all three buttons, in which case it will
