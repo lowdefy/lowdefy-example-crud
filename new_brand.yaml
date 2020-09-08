@@ -5,61 +5,69 @@ properties:
 layout:
   contentGutter: 16 # Set a gutter of 16px between all the blocks on the page
 
-mutations:
-  - id: insert_brand
-    type: MongoDBInsertOne # MongoDb insertOne mutation to write a new brand into the collection
-    connectionId: brands
-    properties:
-      doc:
-        name:
-          _state: name # Insert the brand name we set in state
-        description:
-          _state: description # Insert the brand description we set in state
-
 blocks:
-  - id: new_brand_title # Create a Title block
+  - id: title # Create a Title block
     type: Title
     properties:
       content: New Brand # The title's text
-  - id: name # A single line text box block to capture the new brand name
+  - id: name # A single line text box block to capture the brand name
     type: TextInput
     properties:
       title: Name
       placeholder: Brand Name # Placeholder text inside the block before user types input
   - id: description
-    type: TextArea # A multiline text box block to capture the new brand description
+    type: TextArea # A multi-line text box block to capture the brand description
     properties:
       title: Description
       placeholder: Brand Description
+
+  # Again us the grow (flex-grow) layout property to lay out the buttons.
+  - id: back # Create a back button that will link back to the brands page without making any changes
+    type: Button
+    layout:
+      grow: 1 # Because the button haas a grow of 1, it will expand to take up available space.
+    properties:
+      title: Back
+      icon: ArrowLeftOutlined
+      type: default # Change the type of the button to default
+      block: true # Make the button fill the maximum available width instead of only the width of its contents (title and icon)
+    actions:
+      onClick:
+        - id: link_to_brands # Link back to the brands page
+          type: Link
+          params:
+            pageId: brands
   - id: insert_brand
     type: Button
     layout:
-      span: 16
+      grow: 3 # Because the button haas a grow of 3, which is 3 times as large as the
+      # grow value of the back button, it will expand "3 times faster/bigger",
+      # and occupy more space in the row. It will be laid out in the same row as the back
+      # button.
     properties:
       title: Save
       icon: SaveOutlined
-      block: true # Makes the button fill the maximum defined width instead of only the with of its contents (title and icon)
+      block: true 
+    mutations:
+      - id: insert_brand
+        type: MongoDBInsertOne # MongoDb insertOne mutation to write a new brand into the collection
+        connectionId: brands
+        properties:
+          doc:
+            name:
+              _state: name # Insert the brand name we set in state
+            description:
+              _state: description # Insert the brand description we set in state
+            created_at: 
+              _date: now # Set created_at and updated_at dates as current time
+            updated_at:
+              _date: now
     actions:
       onClick:
         - id: insert_brand # Call the insert_brand mutation
           type: Mutate
           params: insert_brand
-        - id: link_brands # Link back to the brands page
-          type: Link
-          params:
-            pageId: brands
-  - id: back # Create a back button that will link back to the brands page without making any changes
-    type: Button
-    layout:
-      span: 8
-    properties:
-      title: Back
-      icon: ArrowLeftOutlined
-      type: default # Change the type of the button to default
-      block: true
-    actions:
-      onClick:
-        - id: link_brands # Link back to the brands page
+        - id: link_to_brands # Link back to the brands page
           type: Link
           params:
             pageId: brands
