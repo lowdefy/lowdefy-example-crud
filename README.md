@@ -8,7 +8,9 @@ A one-to-many relation will be created between the brands and the products. Each
 
 ## Running this example
 - Clone this repository
-- Run the Lowdefy CLI from the cloned repository
+- Set up a MongoDB Atlas database and set the connection uri as secret `lowdefy_examples_mdb`.
+- Load the sample database into the database.
+- Run the Lowdefy CLI from the cloned repository.
 
 ## Licence
 
