@@ -4,73 +4,72 @@ properties:
   title: Edit Brand
 layout:
   contentGutter: 16 # Set a gutter of 16px between all the blocks on the page.
-
 requests:
   - id: get_brand
-    type: MongoDBFindOne # MongoDb Find One query to get the brand data
+    type: MongoDBFindOne # MongoDb Find One query to get the brand data.
     connectionId: brands
     properties:
       query:
         _id:
-          _url_query: brand_id # Query for the brand by matching the document in the collection's _id with the brand_id passed through as an input from the brands page.
+          _url_query: brand_id # Query for the brand by matching the document in the collection's _id with the brand_id passed in the url query as an input from the brands page.
 actions:
   onEnter:
     # Fetch the brand request when you enter the page.
     - id: fetch_brand
-      type: Fetch
+      type: Request
       params: get_brand 
     # Set the page state equal to the the results from our get_brand request.
     # This will set the brand name and description field values equal to the
-    # values of the brand we fetched in our request
+    # values of the brand we fetched in our request.
     - id: set_brand_info
       type: SetState
       params:
         _request: get_brand 
 
 blocks:
-  - id: title # Create a Title block
+  - id: title # Create a Title block.
     type: Title
     properties:
-      content: Edit Brand # The title's text
-  - id: name
+      content: Edit Brand # The title's text.
+  - id: name # The name text input for the brand. The value of this input is the value of the name field in the page state context.
     type: TextInput
     properties:
       title: Name
       placeholder: Brand Name
-  - id: description
+  - id: description # The description text area input for the brand. The value of this input is the value of the description field in the page state context.
     type: TextArea
     properties:
       title: Description
       placeholder: Brand Description
 
-  # Again us the grow (flex-grow) layout property to lay out the buttons.
-  - id: back # Create a back button that will link back to the brands page without making any changes
+  # Again use the grow (css flex-grow) layout property to lay out the buttons.
+  - id: back # Create a back button that will link back to the brands page without making any changes.
     type: Button
     layout:
       grow: 1 # Because the button has a grow of 1, it will expand to take up available space.
     properties:
       title: Back
       icon: ArrowLeftOutlined
-      type: default # Change the type of the button to default
-      block: true # Makes the button fill the maximum defined width instead of only the with of its contents (title and icon)
+      type: default # Change the type of the button to default.
+      block: true # Makes the button fill the maximum defined width instead of only the with of its contents (title and icon).
     actions:
       onClick:
-        - id: link_to_brands
+        - id: link_to_brands # When clicked, link back to the brands page.
           type: Link
           params:
             pageId: brands
-  - id: delete_brand # Button for deleting the brand
+  - id: delete_brand # Button for deleting the brand.
     type: Button
     layout:
       grow: 1 # Because the button has a grow of 1, it will be placed in the same row as the back button, and expand to take up available space.
     properties:
       title: Delete
       icon: DeleteOutlined
-      type: danger # Set the type of button to a danger button (which is red in color)
+      type: danger # Set the type of button to a danger button (which is red in color).
       block: true
     actions:
       onClick:
-        - id: open_delete_modal # Open a pop up modal to confirm whether you want to delete the brand
+        - id: open_delete_modal # Open a pop up modal to confirm whether you want to delete the brand or not.
           type: CallMethod
           params:
             blockId: delete_modal
@@ -79,60 +78,59 @@ blocks:
     type: Button
     layout:
       grow: 3 # Because the button has a grow of 3, which is 3 times as large as the
-      # grow value of the back and delete buttons, it will expand "3 times faster/bigger",
+      # grow value of the back and delete buttons, it will expand "3 times bigger",
       # and occupy more space in the row. It will be laid out in the same row as the other
       # buttons, unless there is not enough space for all three buttons, in which case it will
-      # drop down to the next row.
-    
+      # drop down to the next row by following css flex layout behavior.
     properties:
       title: Save
       icon: SaveOutlined
       block: true
-    mutations:
+    requests:
       - id: update_brand
-        type: MongoDBUpdateOne # MongoDb updateOne mutation to update the brand
+        type: MongoDBUpdateOne # MongoDb updateOne request to update the brand.
         connectionId: brands
         properties:
           filter:
             _id:
-              _state: _id # Filter the document that matches the document's _id that is in state
+              _state: _id # Select the document that matches the document's _id that is in state.
           update:
             $set:
               name:
-                _state: name # Insert the brand name we set in state
+                _state: name # Insert the brand name we set in state.
               description:
-                _state: description # Insert the description name we set in state
+                _state: description # Insert the description name we set in state.
               updated_at:
-                _date: now # Set the updated_at date as current time
+                _date: now # Set the updated_at date as current time.
     actions:
       onClick:
-        - id: update_brand  # Call the update_brand mutation
-          type: Mutate
+        - id: update_brand  # Call the update_brand request.
+          type: Request
           params: update_brand
-        - id: link_to_brands # Link back to the brands page
+        - id: link_to_brands # Link back to the brands page.
           type: Link
           params:
             pageId: brands
   - id: delete_modal
     type: ConfirmModal
     properties:
-      content: Are you sure you want to delete this brand? # The text inside the modal
-      okText: Yes # Change the default text of the ok button to 'Yes'
+      content: Are you sure you want to delete this brand? # The text inside the modal.
+      okText: Yes # Change the default text of the ok button to 'Yes'.
       okButton:
-        type: danger # Change the default type of the ok button to danger
-      cancelText: No # Change the default text of the cancel button to 'No'
-    mutations:
+        type: danger # Change the default type of the ok button to danger.
+      cancelText: No # Change the default text of the cancel button to 'No'.
+    requests:
       - id: delete_brand
-        type: MongoDBDeleteOne # MongoDb Delete One mutation to delete the brand's document from the collection
+        type: MongoDBDeleteOne # MongoDb Delete One request to delete the brand's document from the collection.
         connectionId: brands
         properties:
           filter:
             _id:
-              _state: _id # Filter the document that matches the document's _id
+              _state: _id # Filter the document that matches the document's _id.
     actions:
       onOk:
-        - id: delete_brand # Call the delete_brand mutation
-          type: Mutate
+        - id: delete_brand # Call the delete_brand request.
+          type: Request
           params: delete_brand
         - id: link_to_brands
           type: Link

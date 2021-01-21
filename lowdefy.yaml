@@ -1,6 +1,6 @@
 
 name: Lowdefy Admin Example
-version: 0.0.6
+lowdefy: 3.4.0
 licence: MIT
 description: |
   This example show patterns that can be used to implement an admin app, that allows
@@ -12,24 +12,23 @@ description: |
   A one-to-many relation will be created between the brands and the products.
   Each product will be related to one brand, and a brand can be related to many products.
 
-
-# Define all the data connections, in this case the brands and products MongoDB collections
+# Define all the data connections, in this case the brands and products MongoDB collections.
 connections:
-  - id: brands # The connectionId that will be used when defining requests and mutations on our pages
+  - id: brands # The connectionId that will be used when defining requests and mutations on our pages.
     type: MongoDBCollection # The type of connection
     properties:
-      databaseName: example-crud # The database name
-      collection: brands # The collection name
+      databaseName: example-crud # The database name.
+      collection: brands # The collection name.
       databaseUri:
-        _secret: lowdefy_examples_mdb # The database connection uri that is stored as a secret and accessed using the _secret operator
-      write: true # Allows writes to the database. By default reads are allowed but writes are not
+        _secret: EXAMPLES_MDB # The database connection uri that is stored as a secret and accessed using the _secret operator.
+      write: true # Allows writes to the database. By default reads are allowed but writes are not.
   - id: products
     type: MongoDBCollection
     properties:
       databaseName: example-crud
       collection: products
       databaseUri:
-        _secret: lowdefy_examples_mdb
+        _secret: EXAMPLES_MDB
       write: true
 
 # Menus used in the app can be listed here
@@ -38,19 +37,21 @@ connections:
 menus:
   - id: default
     links:
-      - id: brands # Define the menu link that directs to the brands page
+      - id: brands # Define the menu link that directs to the brands page.
         type: MenuLink
-        pageId: brands # Id of the brands page
+        pageId: brands # Id of the brands page.
         properties:
-          title: Brands # Title to show on the menu
+          title: Brands # Title to show on the menu.
+          icon: ShopOutlined # Give the menu item a icon, see a list of all availible icons at https://ant.design/components/icon/
       - id: products
         type: MenuLink
         pageId: products
         properties:
           title: Products
+          icon: RestOutlined
  
-# All the pages in the app are listed here
-# Instead of defining the page in the lowdefy.yaml file, it is defined in its own yaml file and referenced here
+# All the pages in the app are listed here.
+# Instead of defining the page in the lowdefy.yaml file, it is defined in its own yaml file and referenced here.
 pages:
   # For brands, a simpler pattern of creating new pages for the new and edit brand actions will be used.
   - _ref: brands.yaml
