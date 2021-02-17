@@ -12,7 +12,7 @@ requests:
       query:
         _id:
           _url_query: brand_id # Query for the brand by matching the document in the collection's _id with the brand_id passed in the url query as an input from the brands page.
-actions:
+events:
   onEnter:
     # Fetch the brand request when you enter the page.
     - id: fetch_brand
@@ -52,7 +52,7 @@ blocks:
       icon: ArrowLeftOutlined
       type: default # Change the type of the button to default.
       block: true # Makes the button fill the maximum defined width instead of only the with of its contents (title and icon).
-    actions:
+    events:
       onClick:
         - id: link_to_brands # When clicked, link back to the brands page.
           type: Link
@@ -67,7 +67,7 @@ blocks:
       icon: DeleteOutlined
       type: danger # Set the type of button to a danger button (which is red in color).
       block: true
-    actions:
+    events:
       onClick:
         - id: open_delete_modal # Open a pop up modal to confirm whether you want to delete the brand or not.
           type: CallMethod
@@ -102,7 +102,7 @@ blocks:
                 _state: description # Insert the description name we set in state.
               updated_at:
                 _date: now # Set the updated_at date as current time.
-    actions:
+    events:
       onClick:
         - id: update_brand  # Call the update_brand request.
           type: Request
@@ -127,7 +127,7 @@ blocks:
           filter:
             _id:
               _state: _id # Filter the document that matches the document's _id.
-    actions:
+    events:
       onOk:
         - id: delete_brand # Call the delete_brand request.
           type: Request

@@ -31,7 +31,7 @@ blocks:
       icon: ArrowLeftOutlined
       type: default # Change the type of the button to default.
       block: true # Make the button fill the maximum available width instead of only the width of its contents (title and icon).
-    actions:
+    events:
       onClick:
         - id: link_to_brands # Link back to the brands page.
           type: Link
@@ -62,7 +62,7 @@ blocks:
               _date: now # Set created_at and updated_at dates as current time.
             updated_at:
               _date: now
-    actions:
+    events:
       onClick:
         - id: insert_brand # Call the insert_brand request.
           type: Request

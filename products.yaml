@@ -80,7 +80,7 @@ requests:
         _id:
           _state: edit_product._id # Filter the document that matches the selected document's _id
 
-actions:
+events:
   # onEnter is fired every time a user visits the page and will keep the page in a loading state
   # until all the actions is this list has completed execution. 
   onEnter:
@@ -128,7 +128,7 @@ blocks:
     properties:
       title: New Product
       icon: PlusOutlined
-    actions:
+    events:
       onClick:
         - id: open_new_drawer # Open the drawer which contains the input fields to add a new product
           type: CallMethod
@@ -157,7 +157,7 @@ blocks:
             properties:
               content: 
                 _state: product_list.$.description
-        actions:
+        events:
           onClick:
             # Set the edit_product object in state to the selected item.
             # Since the item has the same datafields (_id, name, description and brand_id), these fields are populated
@@ -205,7 +205,7 @@ blocks:
           title: Save
           icon: SaveOutlined
           block: true # Makes the button fill the maximum defined width instead of only the with of its contents (title and icon).
-        actions:
+        events:
           onClick:
             - id: insert_product # Call the insert_product request.
               type: Request
@@ -224,7 +224,7 @@ blocks:
                 blockId: new_product_drawer
                 method: toggleOpen  # The method that closes the drawer
     # When the new product drawer closes.
-    actions:
+    events:
       onClose:
         # Clear the new_product field in state.
         # This is so that if the user sets an input, then closes it and opens the drawer
@@ -268,7 +268,7 @@ blocks:
           icon: DeleteOutlined
           type: danger # Set the type of button to a danger button (which is red in color).
           block: true
-        actions:
+        events:
           onClick:
             - id: open_delete_modal # Open a confirm modal to verify whether the user wants to delete the product.
               type: CallMethod
@@ -283,7 +283,7 @@ blocks:
           title: Save
           icon: SaveOutlined
           block: true
-        actions:
+        events:
           onClick:
             - id: update_product # Call the update_product request to save the product changes.
               type: Request
@@ -312,7 +312,7 @@ blocks:
           cancelText: No # Change the default text of the cancel button to 'No'.
           status: warning
         # If the confirm modal is accepted.
-        actions:
+        events:
           onOk:
              # Call the delete_product request which will delete the edit_product._id item from the dataset.
              # If this is not clear have another look at the delete_product request defined at the top of this page.

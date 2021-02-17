@@ -10,7 +10,7 @@ requests:
       pipeline:
         - $sort:
             name: 1 # Sort results alphabetically according to the name.
-actions:
+events:
   # A list of actions that gets completed each time a user visits this page. 
   onEnter:
     - id: fetch_brands
@@ -42,7 +42,7 @@ blocks:
     properties:
       title: New Brand # Button text.
       icon: PlusOutlined # Ant Design icon on the button.
-    actions:
+    events:
       onClick: # All the actions to complete when the button is clicked.
         - id: link_to_new_brand # Link to the page where we will add a new brand.
           type: Link
@@ -70,7 +70,7 @@ blocks:
             properties:
               content: 
                 _state: brands.$.description
-        actions:
+        events:
           onClick:
             - id: link_to_edit_brand # Link to the page where we will edit the clicked brand.
               type: Link
