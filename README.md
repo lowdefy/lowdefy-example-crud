@@ -36,8 +36,4 @@ This simplest solution is to deploy this example to [Netlify](https://netlify.co
 
 ## Licence
 
-<<<<<<< HEAD
 [MIT](https://github.com/lowdefy/lowdefy-example-crud/blob/main/LICENSE)
-=======
-[MIT](https://github.com/lowdefy/lowdefy-example-reporting/blob/main/LICENSE)
->>>>>>> ff593a0b1fe309cce30b2620035ed15e51938ed6
