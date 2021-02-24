@@ -26,113 +26,118 @@ events:
       params:
         _request: get_brand 
 
-blocks:
-  - id: title # Create a Title block.
-    type: Title
-    properties:
-      content: Edit Brand # The title's text.
-  - id: name # The name text input for the brand. The value of this input is the value of the name field in the page state context.
-    type: TextInput
-    properties:
-      title: Name
-      placeholder: Brand Name
-  - id: description # The description text area input for the brand. The value of this input is the value of the description field in the page state context.
-    type: TextArea
-    properties:
-      title: Description
-      placeholder: Brand Description
+areas:
+  header:
+    blocks:
+      - _ref: view_github.yaml
+  content:
+    blocks:
+      - id: title # Create a Title block.
+        type: Title
+        properties:
+          content: Edit Brand # The title's text.
+      - id: name # The name text input for the brand. The value of this input is the value of the name field in the page state context.
+        type: TextInput
+        properties:
+          title: Name
+          placeholder: Brand Name
+      - id: description # The description text area input for the brand. The value of this input is the value of the description field in the page state context.
+        type: TextArea
+        properties:
+          title: Description
+          placeholder: Brand Description
 
-  # Again use the grow (css flex-grow) layout property to lay out the buttons.
-  - id: back # Create a back button that will link back to the brands page without making any changes.
-    type: Button
-    layout:
-      grow: 1 # Because the button has a grow of 1, it will expand to take up available space.
-    properties:
-      title: Back
-      icon: ArrowLeftOutlined
-      type: default # Change the type of the button to default.
-      block: true # Makes the button fill the maximum defined width instead of only the with of its contents (title and icon).
-    events:
-      onClick:
-        - id: link_to_brands # When clicked, link back to the brands page.
-          type: Link
-          params:
-            pageId: brands
-  - id: delete_brand # Button for deleting the brand.
-    type: Button
-    layout:
-      grow: 1 # Because the button has a grow of 1, it will be placed in the same row as the back button, and expand to take up available space.
-    properties:
-      title: Delete
-      icon: DeleteOutlined
-      type: danger # Set the type of button to a danger button (which is red in color).
-      block: true
-    events:
-      onClick:
-        - id: open_delete_modal # Open a pop up modal to confirm whether you want to delete the brand or not.
-          type: CallMethod
-          params:
-            blockId: delete_modal
-            method: open
-  - id: update_brand
-    type: Button
-    layout:
-      grow: 3 # Because the button has a grow of 3, which is 3 times as large as the
-      # grow value of the back and delete buttons, it will expand "3 times bigger",
-      # and occupy more space in the row. It will be laid out in the same row as the other
-      # buttons, unless there is not enough space for all three buttons, in which case it will
-      # drop down to the next row by following css flex layout behavior.
-    properties:
-      title: Save
-      icon: SaveOutlined
-      block: true
-    requests:
+      # Again use the grow (css flex-grow) layout property to lay out the buttons.
+      - id: back # Create a back button that will link back to the brands page without making any changes.
+        type: Button
+        layout:
+          grow: 1 # Because the button has a grow of 1, it will expand to take up available space.
+        properties:
+          title: Back
+          icon: ArrowLeftOutlined
+          type: default # Change the type of the button to default.
+          block: true # Makes the button fill the maximum defined width instead of only the with of its contents (title and icon).
+        events:
+          onClick:
+            - id: link_to_brands # When clicked, link back to the brands page.
+              type: Link
+              params:
+                pageId: brands
+      - id: delete_brand # Button for deleting the brand.
+        type: Button
+        layout:
+          grow: 1 # Because the button has a grow of 1, it will be placed in the same row as the back button, and expand to take up available space.
+        properties:
+          title: Delete
+          icon: DeleteOutlined
+          type: danger # Set the type of button to a danger button (which is red in color).
+          block: true
+        events:
+          onClick:
+            - id: open_delete_modal # Open a pop up modal to confirm whether you want to delete the brand or not.
+              type: CallMethod
+              params:
+                blockId: delete_modal
+                method: open
       - id: update_brand
-        type: MongoDBUpdateOne # MongoDb updateOne request to update the brand.
-        connectionId: brands
+        type: Button
+        layout:
+          grow: 3 # Because the button has a grow of 3, which is 3 times as large as the
+          # grow value of the back and delete buttons, it will expand "3 times bigger",
+          # and occupy more space in the row. It will be laid out in the same row as the other
+          # buttons, unless there is not enough space for all three buttons, in which case it will
+          # drop down to the next row by following css flex layout behavior.
         properties:
-          filter:
-            _id:
-              _state: _id # Select the document that matches the document's _id that is in state.
-          update:
-            $set:
-              name:
-                _state: name # Insert the brand name we set in state.
-              description:
-                _state: description # Insert the description name we set in state.
-              updated_at:
-                _date: now # Set the updated_at date as current time.
-    events:
-      onClick:
-        - id: update_brand  # Call the update_brand request.
-          type: Request
-          params: update_brand
-        - id: link_to_brands # Link back to the brands page.
-          type: Link
-          params:
-            pageId: brands
-  - id: delete_modal
-    type: ConfirmModal
-    properties:
-      content: Are you sure you want to delete this brand? # The text inside the modal.
-      okText: Yes # Change the default text of the ok button to 'Yes'.
-      okButton:
-        type: danger # Change the default type of the ok button to danger.
-      cancelText: No # Change the default text of the cancel button to 'No'.
-    requests:
-      - id: delete_brand
-        type: MongoDBDeleteOne # MongoDb Delete One request to delete the brand's document from the collection.
-        connectionId: brands
+          title: Save
+          icon: SaveOutlined
+          block: true
+        requests:
+          - id: update_brand
+            type: MongoDBUpdateOne # MongoDb updateOne request to update the brand.
+            connectionId: brands
+            properties:
+              filter:
+                _id:
+                  _state: _id # Select the document that matches the document's _id that is in state.
+              update:
+                $set:
+                  name:
+                    _state: name # Insert the brand name we set in state.
+                  description:
+                    _state: description # Insert the description name we set in state.
+                  updated_at:
+                    _date: now # Set the updated_at date as current time.
+        events:
+          onClick:
+            - id: update_brand  # Call the update_brand request.
+              type: Request
+              params: update_brand
+            - id: link_to_brands # Link back to the brands page.
+              type: Link
+              params:
+                pageId: brands
+      - id: delete_modal
+        type: ConfirmModal
         properties:
-          filter:
-            _id:
-              _state: _id # Filter the document that matches the document's _id.
-    events:
-      onOk:
-        - id: delete_brand # Call the delete_brand request.
-          type: Request
-          params: delete_brand
-        - id: link_to_brands
-          type: Link
-          params:
-            pageId: brands
+          content: Are you sure you want to delete this brand? # The text inside the modal.
+          okText: Yes # Change the default text of the ok button to 'Yes'.
+          okButton:
+            type: danger # Change the default type of the ok button to danger.
+          cancelText: No # Change the default text of the cancel button to 'No'.
+        requests:
+          - id: delete_brand
+            type: MongoDBDeleteOne # MongoDb Delete One request to delete the brand's document from the collection.
+            connectionId: brands
+            properties:
+              filter:
+                _id:
+                  _state: _id # Filter the document that matches the document's _id.
+        events:
+          onOk:
+            - id: delete_brand # Call the delete_brand request.
+              type: Request
+              params: delete_brand
+            - id: link_to_brands
+              type: Link
+              params:
+                pageId: brands

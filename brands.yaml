@@ -21,61 +21,66 @@ events:
       params:
         brands:
           _request: get_brands
-blocks:
-  - id: title # Create a Title block
-    type: Title
-    # Css flex properties are used to lay out the title and new brand button.
-    # If a flex property is set, the default span of 24 is not set.
-    # If the grow (flex-grow) property is a positive number, the block will expand to
-    # take up the available space in the row. If more than one block with the grow property
-    # are in the same row, they will expand together to share the available space in the row.
-    # If a block has a grow property of 0, it will only occupy the space it takes due to 
-    # its content size. See https://docs.lowdefy.com/layout for more information.
-    layout:
-      grow: 1 # Because the grow of the title is 1, it will expand to fill all the available space.
-    properties:
-      content: Brands # The title's text.
-  - id: new_brand_button # Create a Button block to add a new brand.
-    type: Button
-    layout:
-      grow: 0 # Because the grow of the button is 0, it will not expand but remain in the same row as the title block.
-    properties:
-      title: New Brand # Button text.
-      icon: PlusOutlined # Ant Design icon on the button.
-    events:
-      onClick: # All the actions to complete when the button is clicked.
-        - id: link_to_new_brand # Link to the page where we will add a new brand.
-          type: Link
-          params:
-            pageId: new-brand # The page id of the new brand page.
-  # A List block to render the following blocks for all items in the brands page state array.
-  - id: brands 
-    type: List
+areas:
+  header:
     blocks:
-      - id: brands.$.container # Wrap all the blocks for a brands item in a box.
-        type: Box
-        style:
-          background: '#fff' # Give the box a white background and some spacing.
-          margin: 10
-          padding: 10
-        blocks:
-          - id: brands.$.name # Show the item name as a title in the list.
-            type: Title
-            properties:
-              content: 
-                _state: brands.$.name
-              level: 3
-          - id: brands.$.description # Show the item description as a paragraph in the list.
-            type: Paragraph
-            properties:
-              content: 
-                _state: brands.$.description
+      - _ref: view_github.yaml
+  content:
+    blocks:
+      - id: title # Create a Title block
+        type: Title
+        # Css flex properties are used to lay out the title and new brand button.
+        # If a flex property is set, the default span of 24 is not set.
+        # If the grow (flex-grow) property is a positive number, the block will expand to
+        # take up the available space in the row. If more than one block with the grow property
+        # are in the same row, they will expand together to share the available space in the row.
+        # If a block has a grow property of 0, it will only occupy the space it takes due to 
+        # its content size. See https://docs.lowdefy.com/layout for more information.
+        layout:
+          grow: 1 # Because the grow of the title is 1, it will expand to fill all the available space.
+        properties:
+          content: Brands # The title's text.
+      - id: new_brand_button # Create a Button block to add a new brand.
+        type: Button
+        layout:
+          grow: 0 # Because the grow of the button is 0, it will not expand but remain in the same row as the title block.
+        properties:
+          title: New Brand # Button text.
+          icon: PlusOutlined # Ant Design icon on the button.
         events:
-          onClick:
-            - id: link_to_edit_brand # Link to the page where we will edit the clicked brand.
+          onClick: # All the actions to complete when the button is clicked.
+            - id: link_to_new_brand # Link to the page where we will add a new brand.
               type: Link
               params:
-                pageId: edit-brand # The page id of the edit brand page.
-                urlQuery:
-                  brand_id:
-                    _state: brands.$._id # Set the brand_id in the url query on the edit-brand page to the _id field of the clicked list item.
+                pageId: new-brand # The page id of the new brand page.
+      # A List block to render the following blocks for all items in the brands page state array.
+      - id: brands 
+        type: List
+        blocks:
+          - id: brands.$.container # Wrap all the blocks for a brands item in a box.
+            type: Box
+            style:
+              background: '#fff' # Give the box a white background and some spacing.
+              margin: 10
+              padding: 10
+            blocks:
+              - id: brands.$.name # Show the item name as a title in the list.
+                type: Title
+                properties:
+                  content: 
+                    _state: brands.$.name
+                  level: 3
+              - id: brands.$.description # Show the item description as a paragraph in the list.
+                type: Paragraph
+                properties:
+                  content: 
+                    _state: brands.$.description
+            events:
+              onClick:
+                - id: link_to_edit_brand # Link to the page where we will edit the clicked brand.
+                  type: Link
+                  params:
+                    pageId: edit-brand # The page id of the edit brand page.
+                    urlQuery:
+                      brand_id:
+                        _state: brands.$._id # Set the brand_id in the url query on the edit-brand page to the _id field of the clicked list item.
