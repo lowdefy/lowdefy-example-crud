@@ -1,6 +1,6 @@
 
 name: Lowdefy Admin Example
-lowdefy: 3.10.1
+lowdefy: 3.18.0
 licence: MIT
 
 # description
@@ -51,7 +51,7 @@ menus:
         properties:
           title: Products
           icon: RestOutlined
- 
+
 # All the pages in the app are listed here.
 # Instead of defining the page in the lowdefy.yaml file, it is defined in its own yaml file and referenced here.
 pages:

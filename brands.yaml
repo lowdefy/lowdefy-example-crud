@@ -11,7 +11,7 @@ requests:
         - $sort:
             name: 1 # Sort results alphabetically according to the name.
 events:
-  # A list of actions that gets completed each time a user visits this page. 
+  # A list of actions that gets completed each time a user visits this page.
   onEnter:
     - id: fetch_brands
       type: Request
@@ -19,7 +19,7 @@ events:
     - id: set_brands
       type: SetState
       params:
-        brands:
+        brands_list:
           _request: get_brands
 areas:
   header:
@@ -34,7 +34,7 @@ areas:
         # If the grow (flex-grow) property is a positive number, the block will expand to
         # take up the available space in the row. If more than one block with the grow property
         # are in the same row, they will expand together to share the available space in the row.
-        # If a block has a grow property of 0, it will only occupy the space it takes due to 
+        # If a block has a grow property of 0, it will only occupy the space it takes due to
         # its content size. See https://docs.lowdefy.com/layout for more information.
         layout:
           grow: 1 # Because the grow of the title is 1, it will expand to fill all the available space.
@@ -53,28 +53,28 @@ areas:
               type: Link
               params:
                 pageId: new-brand # The page id of the new brand page.
-      # A List block to render the following blocks for all items in the brands page state array.
-      - id: brands 
+      # A List block to render the following blocks for all items in the brands_list array in state.
+      - id: brands_list
         type: List
         blocks:
-          - id: brands.$.container # Wrap all the blocks for a brands item in a box.
+          - id: brands_list.$.container # Wrap all the blocks for a brands item in a box.
             type: Box
             style:
               background: '#fff' # Give the box a white background and some spacing.
               margin: 10
               padding: 10
             blocks:
-              - id: brands.$.name # Show the item name as a title in the list.
+              - id: brands_list.$.name # Show the item name as a title in the list.
                 type: Title
                 properties:
-                  content: 
-                    _state: brands.$.name
+                  content:
+                    _state: brands_list.$.name
                   level: 3
-              - id: brands.$.description # Show the item description as a paragraph in the list.
+              - id: brands_list.$.description # Show the item description as a paragraph in the list.
                 type: Paragraph
                 properties:
-                  content: 
-                    _state: brands.$.description
+                  content:
+                    _state: brands_list.$.description
             events:
               onClick:
                 - id: link_to_edit_brand # Link to the page where we will edit the clicked brand.
@@ -83,4 +83,4 @@ areas:
                     pageId: edit-brand # The page id of the edit brand page.
                     urlQuery:
                       brand_id:
-                        _state: brands.$._id # Set the brand_id in the url query on the edit-brand page to the _id field of the clicked list item.
+                        _state: brands_list.$._id # Set the brand_id in the url query on the edit-brand page to the _id field of the clicked list item.
