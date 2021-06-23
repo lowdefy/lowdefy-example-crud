@@ -19,6 +19,9 @@ events:
     - id: set_brands
       type: SetState
       params:
+        # We need to set a value in state with the same key as the id of the List block that will
+        # show all the brands (brands_list). The List block will render a content area for every item
+        # in that array in state.
         brands_list:
           _request: get_brands
 areas:
@@ -53,7 +56,9 @@ areas:
               type: Link
               params:
                 pageId: new-brand # The page id of the new brand page.
-      # A List block to render the following blocks for all items in the brands_list array in state.
+      # A List block to render the following brands.
+      # The list block will render a content area all items in the "brands_list" array in state.
+      # The "brands_list" array is populated by the "set_brands" onEnter action.
       - id: brands_list
         type: List
         blocks:
