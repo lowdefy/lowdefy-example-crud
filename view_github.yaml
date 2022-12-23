@@ -4,7 +4,7 @@ blocks:
   - id: source_button
     type: Button
     properties:
-      icon: GithubOutlined
+      icon: AiOutlineGithub
       title: View App Source Code
       type: default
       shape: round

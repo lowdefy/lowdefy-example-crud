@@ -1,5 +1,5 @@
 name: Lowdefy Admin Example
-lowdefy: 3.21.2
+lowdefy: 4.0.0-alpha.37
 licence: MIT
 
 # description
@@ -43,13 +43,13 @@ menus:
         pageId: brands # Id of the brands page.
         properties:
           title: Brands # Title to show on the menu.
-          icon: ShopOutlined # Give the menu item a icon, see a list of all availible icons at https://ant.design/components/icon/
+          icon: AiOutlineShop # Give the menu item a icon, see a list of all available icons at https://react-icons.github.io/react-icons/
       - id: products
         type: MenuLink
         pageId: products
         properties:
           title: Products
-          icon: RestOutlined
+          icon: AiOutlineRest
 
 # All the pages in the app are listed here.
 # Instead of defining the page in the lowdefy.yaml file, it is defined in its own yaml file and referenced here.
