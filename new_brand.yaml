@@ -33,7 +33,7 @@ areas:
           grow: 1 # Because the button haas a grow of 1, it will expand to take up available space.
         properties:
           title: Back
-          icon: ArrowLeftOutlined
+          icon: AiOutlineArrowLeft
           type: default # Change the type of the button to default.
           block: true # Make the button fill the maximum available width instead of only the width of its contents (title and icon).
         events:
@@ -51,19 +51,24 @@ areas:
           # button.
         properties:
           title: Save
-          icon: SaveOutlined
-          block: true 
+          icon: AiOutlineSave
+          block: true
         requests:
           - id: insert_brand
             type: MongoDBInsertOne # MongoDb insertOne request to write a new brand into the collection.
             connectionId: brands
+            payload:
+              name:
+                _state: name
+              description:
+                _state: description
             properties:
               doc:
                 name:
-                  _state: name # Insert the brand name we set in state.
+                  _payload: name # Insert the brand name we set in state.
                 description:
-                  _state: description # Insert the brand description we set in state.
-                created_at: 
+                  _payload: description # Insert the brand description we set in state.
+                created_at:
                   _date: now # Set created_at and updated_at dates as current time.
                 updated_at:
                   _date: now
