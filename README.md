@@ -1,14 +1,12 @@
 # Lowdefy CRUD Admin Example
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/f293c299-c9b1-4d57-931b-2e4700e45eae/deploy-status)](https://app.netlify.com/sites/lowdefy-example-crud/deploys)
-
 > [View this example.](https://example-crud.lowdefy.com)
 
 This example shows patterns to implement a data admin app which allows users to view, create new, edit and delete data records.
 
 The data in this very basic example contains a set of brands, and a set of products saved in a MongoDB database. A one-to-many relation exists between brands and products. Each product is related to one brand, and a brand can be related to many products.
 
-This Lowdefy application consists of four pages
+This Lowdefy application consists of four pages.
 
 ## Running this example
 
@@ -20,11 +18,7 @@ This Lowdefy application consists of four pages
     - You can read more about the [Lowdefy MongoDB connector](https://docs.lowdefy.com/MongoDB).
 - Clone this repository.
 - Create a `.env` file in your project folder and set your MongoDB database connector URI as a variable in the `.env` file: `LOWDEFY_SECRET_EXAMPLES_MDB="{{ your_mongodb_connection_uri }}"`
-- In the command console, navigate to your project folder and run the Lowdefy CLI: `npx lowdefy@latest dev`.
-
-## Deploying this example
-
-This simplest solution is to deploy this example to [Netlify](https://netlify.com). See [the Netlify Deployment instructions](https://docs.lowdefy.com/deployment) for more detail on how to deploy a Lowdefy app to Netlify.
+- In the command console, navigate to your project folder and run the Lowdefy CLI: `pnpx lowdefy@4.0.0-alpha.37 dev`.
 
 ## More Lowdefy resources
 
