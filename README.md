@@ -8,6 +8,8 @@ The data in this very basic example contains a set of brands, and a set of produ
 
 This Lowdefy application consists of four pages.
 
+Adding a new brand, editing an existing brand and viewing the saved brands have been split up into separate pages. This implementation is a simpler approach than that of the products. Adding a new product, editing an existing product and viewing the saved products are all done on one page. Drawers are used in order to get this right, which leads to a more complex implementation.
+
 ## Running this example
 
 -  Create a MongoDB cluster and get a URI connection string:
