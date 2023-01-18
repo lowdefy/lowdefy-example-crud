@@ -16,14 +16,6 @@ events:
     - id: fetch_brands
       type: Request
       params: get_brands # Fetch the brands data query each time a user enter this page.
-    - id: set_brands
-      type: SetState
-      params:
-        # We need to set a value in state with the same key as the id of the List block that will
-        # show all the brands (brands_list). The List block will render a content area for every item
-        # in that array in state.
-        brands_list:
-          _request: get_brands
 areas:
   header:
     blocks:
