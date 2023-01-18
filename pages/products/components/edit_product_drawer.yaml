@@ -1,0 +1,98 @@
+id: edit_product_drawer
+type: Drawer
+properties:
+  title: Edit Product
+  width: 512
+layout:
+  contentGutter: 16
+blocks:
+  - id: edit_product.name # A text input block to edit the product name.
+    type: TextInput
+    properties:
+      title: Name
+      placeholder: Product Name
+  - id: edit_product.brand_id # A dropdown selector to select the brand_id of the brand to which this product belongs to.
+    type: Selector
+    properties:
+      title: Brand
+      placeholder: Select brand
+      options:
+        _request: brands_selector # Populate the options of the dropdown using the request we defined earlier.
+  - id: edit_product.description
+    type: TextArea
+    properties:
+      title: Description
+      placeholder: Product Description
+  - id: delete_product_button # Button for deleting the product.
+    type: Button
+    layout:
+      grow: 1
+    properties:
+      title: Delete
+      icon: DeleteOutlined
+      type: danger # Set the type of button to a danger button (which is red in color).
+      block: true
+    events:
+      onClick:
+        - id: open_delete_modal # Open a confirm modal to verify whether the user wants to delete the product.
+          type: CallMethod
+          params:
+            blockId: delete_modal
+            method: open
+  - id: update_product_button
+    type: Button
+    layout:
+      grow: 3 # Make the update button 3 times the width of the delete button in the display css flex row
+    properties:
+      title: Save
+      icon: AiOutlineSave
+      block: true
+    events:
+      onClick:
+        - id: update_product # Call the update_product request to save the product changes.
+          type: Request
+          params: update_product
+        - id: fetch_all_products # Refresh the all_products request to get the latest product details from the database.
+          type: Request
+          params: all_products
+        - id: set_products # Update the product_list array in state so that the page shows the latest product data.
+          type: SetState
+          params:
+            product_list:
+              _request: all_products
+        - id: close_drawer # Close the edit_product drawer.
+          type: CallMethod
+          params:
+            blockId: edit_product_drawer
+            method: toggleOpen
+  # This is the confirm modal which opens as a user clicks delete the product being edited.
+  - id: delete_modal
+    type: ConfirmModal
+    properties:
+      content: Are you sure you want to delete this product? # The text inside the modal.
+      okText: Yes # Change the default text of the ok button to 'Yes'.
+      okButton:
+        type: danger # Change the default type of the ok button to danger.
+      cancelText: No # Change the default text of the cancel button to 'No'.
+      status: warning
+    # If the confirm modal is accepted.
+    events:
+      onOk:
+        # Call the delete_product request which will delete the edit_product._id item from the dataset.
+        # If this is not clear have another look at the delete_product request defined at the top of this page.
+        - id: delete_product
+          type: Request
+          params: delete_product
+        - id: fetch_all_products # Refresh the all_products request again to the list of products without the newly deleted one.
+          type: Request
+          params: all_products
+        - id: set_products # Update the product_list array is state with the response of the newly fetched data.
+          type: SetState
+          params:
+            product_list:
+              _request: all_products
+        - id: close_edit_drawer # Close the edit_product drawer.
+          type: CallMethod
+          params:
+            blockId: edit_product_drawer
+            method: toggleOpen
