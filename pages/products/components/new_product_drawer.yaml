@@ -1,0 +1,59 @@
+id: new_product_drawer
+type: Drawer
+properties:
+  title: New Product
+  width: 512 # Set the width of the drawer to be 512px.
+layout:
+  contentGutter: 16 # Set a gutter of 16px between all the blocks in the drawer.
+blocks:
+  - id: new_product.name # A text input block to capture the new product name.
+    type: TextInput
+    properties:
+      title: Name
+      placeholder: Product Name # Text to display inside the input box when nothing has been entered yet.
+  - id: new_product.brand_id # A dropdown selector to select the brand_id of the brand to which this product belongs to.
+    type: Selector
+    properties:
+      title: Brand
+      placeholder: Select brand
+      options:
+        _request: brands_selector # Populate the options of the dropdown using the brands_selector request response.
+  - id: new_product.description
+    type: TextArea # A multi-line text box block to capture the new product description
+    properties:
+      title: Description
+      placeholder: Product Description
+  - id: insert_product
+    type: Button
+    properties:
+      title: Save
+      icon: AiOutlineSave
+      block: true # Makes the button fill the maximum defined width instead of only the with of its contents (title and icon).
+    events:
+      onClick:
+        - id: insert_product # Call the insert_product request.
+          type: Request
+          params: insert_product
+        - id: fetch_all_products # Refresh the all_products request to get the newly created product.
+          type: Request
+          params: all_products
+        - id: set_products # Update the product_list array in state with the all_products request response.
+          type: SetState
+          params:
+            product_list:
+              _request: all_products
+        - id: close_new_drawer # Close the new_product drawer.
+          type: CallMethod
+          params:
+            blockId: new_product_drawer
+            method: toggleOpen # The method that closes the drawer
+# When the new product drawer closes.
+events:
+  onClose:
+    # Clear the new_product field in state.
+    # This is so that if the user sets an input, then closes it and opens the drawer
+    # again, the user input is reset.
+    - id: clear_new_product
+      type: SetState
+      params:
+        new_product: {}

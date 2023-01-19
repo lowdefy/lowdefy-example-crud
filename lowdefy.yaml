@@ -55,9 +55,9 @@ menus:
 # Instead of defining the page in the lowdefy.yaml file, it is defined in its own yaml file and referenced here.
 pages:
   # For brands, a simpler pattern of creating new pages for the new and edit brand actions will be used.
-  - _ref: brands.yaml
-  - _ref: new_brand.yaml
-  - _ref: edit_brand.yaml
+  - _ref: pages/brands/brands.yaml
+  - _ref: pages/brands/new_brand.yaml
+  - _ref: pages/brands/edit_brand.yaml
   # For products, the edit and new brand actions will be included on the same page. This is more complex,
   # but results in a better user experience.
-  - _ref: products.yaml
+  - _ref: pages/products/products.yaml

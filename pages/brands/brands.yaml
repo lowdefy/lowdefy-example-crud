@@ -16,18 +16,10 @@ events:
     - id: fetch_brands
       type: Request
       params: get_brands # Fetch the brands data query each time a user enter this page.
-    - id: set_brands
-      type: SetState
-      params:
-        # We need to set a value in state with the same key as the id of the List block that will
-        # show all the brands (brands_list). The List block will render a content area for every item
-        # in that array in state.
-        brands_list:
-          _request: get_brands
 areas:
   header:
     blocks:
-      - _ref: view_github.yaml
+      - _ref: shared/components/view_github.yaml
   content:
     blocks:
       - id: title # Create a Title block
@@ -56,36 +48,36 @@ areas:
               type: Link
               params:
                 pageId: new-brand # The page id of the new brand page.
-      # A List block to render the following brands.
-      # The list block will render a content area all items in the "brands_list" array in state.
-      # The "brands_list" array is populated by the "set_brands" onMount action.
-      - id: brands_list
-        type: List
-        blocks:
-          - id: brands_list.$.container # Wrap all the blocks for a brands item in a box.
-            type: Box
-            style:
-              background: '#fff' # Give the box a white background and some spacing.
-              margin: 10
-              padding: 10
-            blocks:
-              - id: brands_list.$.name # Show the item name as a title in the list.
-                type: Title
-                properties:
-                  content:
-                    _state: brands_list.$.name
-                  level: 3
-              - id: brands_list.$.description # Show the item description as a paragraph in the list.
-                type: Paragraph
-                properties:
-                  content:
-                    _state: brands_list.$.description
-            events:
-              onClick:
-                - id: link_to_edit_brand # Link to the page where we will edit the clicked brand.
-                  type: Link
-                  params:
-                    pageId: edit-brand # The page id of the edit brand page.
-                    urlQuery:
-                      brand_id:
-                        _state: brands_list.$._id # Set the brand_id in the url query on the edit-brand page to the _id field of the clicked list item.
+
+      # An AgGridAlpine table block to render the following brands.
+      # The table will display the name and description of each brand.
+      # The "brands_table" rowData is populated by the "get_brands" request.
+      - id: brands_table
+        type: AgGridAlpine
+        events:
+          onRowClick:
+            - id: link # Link to the page where we will edit the clicked brand.
+              type: Link
+              params:
+                pageId: edit-brand # The page id of the edit brand page.
+                urlQuery:
+                  brand_id:
+                    _event: row._id # Set the brand_id in the url query on the edit-brand page to the _id field of the clicked row item.
+        properties:
+          height: 550
+          enableCellTextSelection: true
+          rowData:
+            _request: get_brands
+          defaultColDef:
+            sortable: true
+            resizable: true
+            filter: true
+            filterParams:
+              buttons: ['reset']
+          columnDefs:
+            - headerName: Name
+              field: name
+              width: 300
+            - headerName: Description
+              field: description
+              flex: 1 0 auto

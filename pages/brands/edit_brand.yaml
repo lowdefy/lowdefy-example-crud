@@ -32,7 +32,7 @@ events:
 areas:
   header:
     blocks:
-      - _ref: view_github.yaml
+      - _ref: shared/components/view_github.yaml
   content:
     blocks:
       - id: title # Create a Title block.

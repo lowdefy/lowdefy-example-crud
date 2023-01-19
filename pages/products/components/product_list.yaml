@@ -1,0 +1,36 @@
+id: product_list # A List block to render the following blocks for all items in the product_list page state variable.
+type: List
+blocks:
+  - id: product_list.$.container # Wrap all the blocks for a brand item in a box.
+    type: Box
+    style:
+      background: '#fff' # Give the box a white background and some spacing.
+      margin: 10
+      padding: 10
+    blocks:
+      - id: product_list.$.name # Show the item name as a title in the list.
+        type: Title
+        properties:
+          content:
+            _state: product_list.$.name
+          level: 3
+      - id: product_list.$.description # Show the item description as a paragraph in the list.
+        type: Paragraph
+        properties:
+          content:
+            _state: product_list.$.description
+    events:
+      onClick:
+        # Set the edit_product object in state to the selected item.
+        # Since the item has the same datafields (_id, name, description and brand_id), these fields are populated
+        # in the edit_product input fields as the drawer is opened.
+        - id: set_edit_product
+          type: SetState
+          params:
+            edit_product:
+              _state: product_list.$
+        - id: open_edit_drawer # Open the drawer which contains the input fields to edit the selected product.
+          type: CallMethod
+          params:
+            blockId: edit_product_drawer
+            method: toggleOpen
