@@ -54,24 +54,8 @@ areas:
           icon: AiOutlineSave
           block: true
         requests:
-          - id: insert_brand
-            type: MongoDBInsertOne # MongoDb insertOne request to write a new brand into the collection.
-            connectionId: brands
-            payload:
-              name:
-                _state: name
-              description:
-                _state: description
-            properties:
-              doc:
-                name:
-                  _payload: name # Insert the brand name we set in state.
-                description:
-                  _payload: description # Insert the brand description we set in state.
-                created_at:
-                  _date: now # Set created_at and updated_at dates as current time.
-                updated_at:
-                  _date: now
+          # Requests defined in their own yaml files.yaml file.
+          - _ref: pages/brands/requests/insert_brand.yaml
         events:
           onClick:
             - id: insert_brand # Call the insert_brand request.

@@ -3,13 +3,8 @@ type: PageSiderMenu
 properties:
   title: Brands
 requests:
-  - id: get_brands
-    type: MongoDBAggregation # MongoDb Aggregation to get the table data.
-    connectionId: brands # Id of the connection defined in the lowdefy.yaml file.
-    properties:
-      pipeline:
-        - $sort:
-            name: 1 # Sort results alphabetically according to the name.
+  # Requests defined in their own yaml files.
+  - _ref: pages/brands/requests/get_brands.yaml # Get all the brands from the database.
 events:
   # A list of actions that gets completed each time a user visits this page.
   onMount:
@@ -73,7 +68,7 @@ areas:
             resizable: true
             filter: true
             filterParams:
-              buttons: ['reset']
+              buttons: ["reset"]
           columnDefs:
             - headerName: Name
               field: name

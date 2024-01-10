@@ -1,0 +1,7 @@
+id: get_brands
+type: MongoDBAggregation # MongoDb Aggregation to get the table data.
+connectionId: brands # Id of the connection defined in the lowdefy.yaml file.
+properties:
+  pipeline:
+    - $sort:
+        name: 1 # Sort results alphabetically according to the name.

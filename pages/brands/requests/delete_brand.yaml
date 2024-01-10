@@ -1,0 +1,10 @@
+id: delete_brand
+type: MongoDBDeleteOne # MongoDb Delete One request to delete the brand's document from the collection.
+connectionId: brands
+payload:
+  _id:
+    _state: _id
+properties:
+  filter:
+    _id:
+      _payload: _id # Filter the document that matches the document's _id.
