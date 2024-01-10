@@ -1,0 +1,11 @@
+id: brands_selector
+type: MongoDBAggregation
+connectionId: brands # Id of the connection defined in the lowdefy.yaml file.
+properties:
+  pipeline:
+    - $project: # Project the correct fields that the dropdown selector expects: a list of value-label pairs
+        _id: 0
+        label: $name # This is what the user will see in the dropdown
+        value: $_id # This is the value of the option selected in the dropdown
+    - $sort:
+        label: 1 # Sort the list alphabetically according to the label

@@ -1,0 +1,9 @@
+# MongoDb Aggregation to get the product data.
+id: all_products
+type: MongoDBAggregation
+connectionId: products # Id of the connection defined in the lowdefy.yaml file.
+properties:
+  pipeline: # Here we can simply provide any valid MongoDB aggregation pipeline, like do a very basic sort.
+    - $sort:
+        name: 1 # Sort alphabetically according to the name
+# MongoDb Aggregation to get a list of the brands and their _ids to be used by a brand dropdown selector.

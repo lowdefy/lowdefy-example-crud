@@ -1,0 +1,10 @@
+id: delete_product
+type: MongoDBDeleteOne # MongoDb deleteOne request to delete the selected product's document from the collection
+connectionId: products
+payload:
+  _id:
+    _state: edit_product._id
+properties:
+  filter:
+    _id:
+      _payload: _id # Filter the document that matches the selected document's _id
