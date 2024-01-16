@@ -14,8 +14,6 @@ Adding a new brand, editing an existing brand and viewing the saved brands have 
 
 - Create a MongoDB cluster and get a URI connection string:
   - Create a free MongoDB database cluster hosted by [MongoDB Atlas](https://www.mongodb.com/try).
-  - Create a new database called `example-crud`.
-  - Add two new collections to this database called `brands` and `products`.
   - In the Database access section, create a database user with read access to any database (You can also specify the database as `example-crud`).
   - In the main cluster view, click "connect", then "Connect you application". This will give a MongoDB URI connection string. Use the credentials you just created.
   - You can read more about the [Lowdefy MongoDB connector](https://docs.lowdefy.com/MongoDB).
