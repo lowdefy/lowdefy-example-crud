@@ -1,0 +1,18 @@
+id: insert_product
+type: MongoDBInsertOne # MongoDb insertOne request to write a new product into the collection
+connectionId: products
+payload:
+  new_product:
+    _state: new_product
+properties:
+  doc:
+    name:
+      _payload: new_product.name
+    brand_id:
+      _payload: new_product.brand_id
+    description:
+      _payload: new_product.description
+    created_at:
+      _date: now # Set created_at and updated_at dates as current time
+    updated_at:
+      _date: now

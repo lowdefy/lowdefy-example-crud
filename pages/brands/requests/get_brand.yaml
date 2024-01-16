@@ -1,0 +1,10 @@
+id: get_brand
+type: MongoDBFindOne # MongoDb Find One query to get the brand data.
+connectionId: brands
+payload:
+  brand_id:
+    _url_query: brand_id
+properties:
+  query:
+    _id:
+      _payload: brand_id # Query for the brand by matching the document in the collection's _id with the brand_id passed in the url query as an input from the brands page.

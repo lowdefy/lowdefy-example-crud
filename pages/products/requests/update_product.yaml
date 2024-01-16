@@ -1,0 +1,20 @@
+id: update_product
+type: MongoDBUpdateOne # MongoDb updateOne request to update the selected product
+connectionId: products
+payload:
+  edit_product:
+    _state: edit_product
+properties:
+  filter:
+    _id:
+      _payload: edit_product._id # Filter the document that matches the selected document's _id (which is nested in the edit_product object)
+  update:
+    $set:
+      name:
+        _payload: edit_product.name
+      brand_id:
+        _payload: edit_product.brand_id
+      description:
+        _payload: edit_product.description
+      updated_at:
+        _date: now

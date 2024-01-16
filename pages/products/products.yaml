@@ -19,74 +19,12 @@ properties:
 # In the brands example, the requests were placed on the block that used them, so they are close
 # to where they are used. Both approaches can be used, but it is best to be consistent throughout an app.
 requests:
-  # MongoDb Aggregation to get the product data.
-  - id: all_products
-    type: MongoDBAggregation
-    connectionId: products # Id of the connection defined in the lowdefy.yaml file.
-    properties:
-      pipeline: # Here we can simply provide any valid MongoDB aggregation pipeline, like do a very basic sort.
-        - $sort:
-            name: 1 # Sort alphabetically according to the name
-  # MongoDb Aggregation to get a list of the brands and their _ids to be used by a brand dropdown selector.
-  - id: brands_selector
-    type: MongoDBAggregation
-    connectionId: brands # Id of the connection defined in the lowdefy.yaml file.
-    properties:
-      pipeline:
-        - $project: # Project the correct fields that the dropdown selector expects: a list of value-label pairs
-            _id: 0
-            label: $name # This is what the user will see in the dropdown
-            value: $_id # This is the value of the option selected in the dropdown
-        - $sort:
-            label: 1 # Sort the list alphabetically according to the label
-  - id: insert_product
-    type: MongoDBInsertOne # MongoDb insertOne request to write a new product into the collection
-    connectionId: products
-    payload:
-      new_product:
-        _state: new_product
-    properties:
-      doc:
-        name:
-          _payload: new_product.name
-        brand_id:
-          _payload: new_product.brand_id
-        description:
-          _payload: new_product.description
-        created_at:
-          _date: now # Set created_at and updated_at dates as current time
-        updated_at:
-          _date: now
-  - id: update_product
-    type: MongoDBUpdateOne # MongoDb updateOne request to update the selected product
-    connectionId: products
-    payload:
-      edit_product:
-        _state: edit_product
-    properties:
-      filter:
-        _id:
-          _payload: edit_product._id # Filter the document that matches the selected document's _id (which is nested in the edit_product object)
-      update:
-        $set:
-          name:
-            _payload: edit_product.name
-          brand_id:
-            _payload: edit_product.brand_id
-          description:
-            _payload: edit_product.description
-          updated_at:
-            _date: now
-  - id: delete_product
-    type: MongoDBDeleteOne # MongoDb deleteOne request to delete the selected product's document from the collection
-    connectionId: products
-    payload:
-      _id:
-        _state: edit_product._id
-    properties:
-      filter:
-        _id:
-          _payload: _id # Filter the document that matches the selected document's _id
+  # Requests defined in their own yaml files.
+  - _ref: pages/products/requests/all_products.yaml
+  - _ref: pages/products/requests/brands_selector.yaml
+  - _ref: pages/products/requests/insert_product.yaml
+  - _ref: pages/products/requests/update_product.yaml
+  - _ref: pages/products/requests/delete_product.yaml
 
 events:
   # onMount is fired every time a user visits the page and will keep the page in a loading state

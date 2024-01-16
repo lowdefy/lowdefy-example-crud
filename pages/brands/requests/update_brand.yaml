@@ -1,0 +1,22 @@
+id: update_brand
+type: MongoDBUpdateOne # MongoDb updateOne request to update the brand.
+connectionId: brands
+payload:
+  _id:
+    _state: _id
+  name:
+    _state: name
+  description:
+    _state: description
+properties:
+  filter:
+    _id:
+      _payload: _id # Select the document that matches the document's _id that is in state.
+  update:
+    $set:
+      name:
+        _payload: name # Insert the brand name we set in state.
+      description:
+        _payload: description # Insert the description name we set in state.
+      updated_at:
+        _date: now # Set the updated_at date as current time.

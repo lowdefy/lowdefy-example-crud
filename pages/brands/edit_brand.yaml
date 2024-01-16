@@ -5,16 +5,8 @@ properties:
 layout:
   contentGutter: 16 # Set a gutter of 16px between all the blocks on the page.
 requests:
-  - id: get_brand
-    type: MongoDBFindOne # MongoDb Find One query to get the brand data.
-    connectionId: brands
-    payload:
-      brand_id:
-        _url_query: brand_id
-    properties:
-      query:
-        _id:
-          _payload: brand_id # Query for the brand by matching the document in the collection's _id with the brand_id passed in the url query as an input from the brands page.
+  # Requests defined in their own yaml files.
+  - _ref: pages/brands/requests/get_brand.yaml # Get the brand data from the database.
 events:
   onMount:
     # Fetch the brand request when you enter the page.
@@ -95,28 +87,8 @@ areas:
           icon: AiOutlineSave
           block: true
         requests:
-          - id: update_brand
-            type: MongoDBUpdateOne # MongoDb updateOne request to update the brand.
-            connectionId: brands
-            payload:
-              _id:
-                _state: _id
-              name:
-                _state: name
-              description:
-                _state: description
-            properties:
-              filter:
-                _id:
-                  _payload: _id # Select the document that matches the document's _id that is in state.
-              update:
-                $set:
-                  name:
-                    _payload: name # Insert the brand name we set in state.
-                  description:
-                    _payload: description # Insert the description name we set in state.
-                  updated_at:
-                    _date: now # Set the updated_at date as current time.
+          # Requests defined in their own yaml files.
+          - _ref: pages/brands/requests/update_brand.yaml # Update the brand in the database.
         events:
           onClick:
             - id: update_brand # Call the update_brand request.
@@ -135,16 +107,8 @@ areas:
             type: danger # Change the default type of the ok button to danger.
           cancelText: No # Change the default text of the cancel button to 'No'.
         requests:
-          - id: delete_brand
-            type: MongoDBDeleteOne # MongoDb Delete One request to delete the brand's document from the collection.
-            connectionId: brands
-            payload:
-              _id:
-                _state: _id
-            properties:
-              filter:
-                _id:
-                  _payload: _id # Filter the document that matches the document's _id.
+          # Requests defined in their own yaml files.
+          - _ref: pages/brands/requests/delete_brand.yaml # Delete the brand from the database.
         events:
           onOk:
             - id: delete_brand # Call the delete_brand request.
